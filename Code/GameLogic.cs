@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,10 +27,11 @@ namespace AstraLostInSpace
         static float elapsedForGuide;
         static float delay;
         static int frame;
+        static bool isPowerUp;
 
-        static SpriteFont font = SplashScreen.medFont;
-        static SpriteFont guideFont = SplashScreen.smallFont;
-        public static int score { get; private set; }
+        static readonly SpriteFont font = SplashScreen.medFont;
+        static readonly SpriteFont guideFont = SplashScreen.smallFont;
+        public static int Score { get; private set; }
 
         public static SoundEffect Laser { get; set; }
         public static SoundEffect Hit { get; set; }
@@ -39,7 +41,19 @@ namespace AstraLostInSpace
 
         public static void StarShipShot()
         {
-            shots.Add(new Shot(starShip.GetPosForShot));
+            if (Score < 2 || Score % 20 >= 0 && Score % 20 < 10)
+            {
+                isPowerUp = false;
+                shots.Add(new Shot(starShip.GetPosForShot));
+            }
+            else
+            {
+                isPowerUp = true;
+                for (var i = -1; i < 2; i++)
+                {
+                    shots.Add(new Shot(new Vector2(starShip.GetPosForShot.X + 20 * i, starShip.GetPosForShot.Y)));
+                }
+            }
             Laser.Play();
         }
 
@@ -49,19 +63,19 @@ namespace AstraLostInSpace
             SpriteBatch = spriteBatch;
             stars = new Star[90];
             aliensSmall = new SmallAlien[2]; aliensMed = new MedAlien[1]; aliensBig = new BigAlien[1];
-            score = 0; frame = 0; frame = 0;
+            Score = 0; frame = 0; frame = 0;
             delay = 300;
 
             SoundEffect.MasterVolume = 0.03f;
 
             for (var i = 0; i < stars.Length - 1; i += 2)
             {
-                stars[i] = new Star(new Vector2(GetRnd(playZoneX1, playZoneX2), GetRnd(0, height)), new Vector2(0, 1.1f), Color.White);
+                stars[i] = new Star(new Vector2(GetRnd(playZoneX1, playZoneX2), GetRnd(0, height)), new Vector2(0, 1f), Color.White);
                 stars[i + 1] = new Star(new Vector2(GetRnd(playZoneX1, playZoneX2), GetRnd(0, height)), new Vector2(0, 0.8f), Color.FromNonPremultiplied(60, 60, 60, 255));
             }
 
             for (var i = 0; i < aliensSmall.Length; i++)
-                aliensSmall[i] = new SmallAlien(new Vector2(GetRnd(playZoneX1, playZoneX2), GetRnd(-height * 5 / 18, -height * 5 / 54)), new Vector2(0, 1));
+                aliensSmall[i] = new SmallAlien(new Vector2(GetRnd(playZoneX1, playZoneX2), GetRnd(-height * 5 / 18, -height * 5 / 54)), new Vector2(0, 0.9f));
 
             for (var i = 0; i < aliensMed.Length; i++)
             {
@@ -69,7 +83,7 @@ namespace AstraLostInSpace
                 aliensBig[i] = new BigAlien(new Vector2(GetRnd(playZoneX1 + 30, playZoneX2 - 30), GetRnd(-height * 20 / 27, -height * 65 / 108)), new Vector2(0, 0.5f));
             }
 
-            starShip = new StarShip(new Vector2(Width / 2, Height - Height * 5 / 27)); healths = new List<Healths>();
+            starShip = new StarShip(new Vector2(Width / 2 - 20, Height * 22 / 27)); healths = new List<Healths>();
             shots = new List<Shot>();
 
             alienShots = new List<AlienShot>();
@@ -101,17 +115,19 @@ namespace AstraLostInSpace
             if (elapsedForGuide < 6000)
             {
                 if (elapsedForGuide < 1500)
-                    SpriteBatch.DrawString(guideFont, "\'wasd\' to move", new Vector2(width * 85 / 192, height / 2), Color.White);
+                    SpriteBatch.DrawString(guideFont, "\'wasd\' to move", new Vector2(width * 43 / 96, height / 2), Color.White);
                 else if (elapsedForGuide < 3000)
-                    SpriteBatch.DrawString(guideFont, "\'enter\' to fire", new Vector2(width * 85 / 192, height / 2), Color.White);
+                    SpriteBatch.DrawString(guideFont, "\'enter\' to fire", new Vector2(width * 43 / 96, height / 2), Color.White);
                 else if (elapsedForGuide < 4500)
-                    SpriteBatch.DrawString(guideFont, "\'p\' to pause", new Vector2(width * 11 / 24, height / 2), Color.White);
+                    SpriteBatch.DrawString(guideFont, "\'p\' to pause", new Vector2(width * 89 / 192, height / 2), Color.White);
                 else
-                    SpriteBatch.DrawString(font, "enjoy!", new Vector2(width * 15 / 32, height / 2), Color.White);
+                    SpriteBatch.DrawString(font, "enjoy!", new Vector2(width * 91 / 192, height / 2), Color.White);
             }
             else
             {
-                SpriteBatch.DrawString(font, score.ToString(), new Vector2(playZoneX1, height * 26 / 27), Color.White);
+                if (isPowerUp) SpriteBatch.DrawString(guideFont, "x3", new Vector2(playZoneX1, height * 97 / 108), Color.White);
+
+                SpriteBatch.DrawString(font, Score.ToString(), new Vector2(playZoneX1, height * 26 / 27), Color.White);
                 foreach (var health in healths) health.Draw();
                 foreach (var alien in aliensSmall) alien.Draw(frame);
                 foreach (var alien in aliensMed) alien.Draw(frame);
@@ -129,30 +145,34 @@ namespace AstraLostInSpace
         #region Увеличить счет
         public static void AddScore(int magnifier)
         {
-            Score.IncreaseScore(magnifier);
-            score = Score.GetCurrentScore;
+            global::AstraLostInSpace.Score.IncreaseScore(magnifier);
+            Score = global::AstraLostInSpace.Score.GetCurrentScore;
         }
         # endregion
 
         public static void Update(GameTime gameTime)
         {
-            if (starShip.IsGameOver) Final.score = score;
+            if (starShip.IsGameOver) Final.score = Score;
             if (elapsedForGuide < 6000) elapsedForGuide += gameTime.ElapsedGameTime.Milliseconds;
-            Animate(gameTime);
 
+            Animate(gameTime);
             foreach (var star in stars) star.Update();
             starShip.Update(gameTime);
 
             if (elapsedForGuide >= 6000)
             {
-                foreach (var alien in aliensSmall) alien.Update(gameTime, starShip, 1200);
-                foreach (var alien in aliensMed) alien.Update(gameTime, starShip, 1000);
-                foreach (var alien in aliensBig) alien.Update(gameTime, starShip, 800);
+                Parallel.Invoke(
+                     () => { foreach (var alien in aliensSmall) alien.Update(gameTime, starShip, 1200); },
+                     () => { foreach (var alien in aliensMed) alien.Update(gameTime, starShip, 1000); },
+                     () => { foreach (var alien in aliensBig) alien.Update(gameTime, starShip, 800); }
+                     );
+
+                #region Выстрелы пришельцев
                 for (var i = 0; i < alienShots.Count; i++)
                 {
-                    //var alienShot = alienShots[i];
-                    alienShots[i].Update();
-                    if (!starShip.IsGod && !starShip.IsGameOver && IsHit(alienShots[i].GetShotPos, starShip.GetPosForShot, 20))
+                    var alienShot = alienShots[i];
+                    alienShot.Update();
+                    if (!starShip.IsGod && !starShip.IsGameOver && IsHit(alienShot.GetShotPos, starShip.GetPosForShot, 20))
                     {
                         starShip.TakeDamage();
                         healths.RemoveAt(healths.Count - 1);
@@ -160,12 +180,13 @@ namespace AstraLostInSpace
                         i--;
                     }
 
-                    if (alienShots[i].IsHidden)
+                    if (alienShot.IsHidden)
                     {
                         alienShots.RemoveAt(i);
                         i--;
                     }
                 }
+                #endregion
             }
 
             #region Выстрелы игрока

@@ -16,7 +16,7 @@ namespace AstraLostInSpace
 
     public class AstraLostInSpace : Game
     {
-        readonly GraphicsDeviceManager graphics;
+        GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         public static Stat stat = Stat.SplashScreen;
         KeyboardState keyState, oldKeyState;

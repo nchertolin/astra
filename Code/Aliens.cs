@@ -79,7 +79,7 @@ namespace AstraLostInSpace
         }
 
         public override void RandomSet() =>
-            pos = new Vector2(GameLogic.GetRnd(playZoneX1, playZoneX2),GameLogic.GetRnd(-GameLogic.height * 5 / 18, -GameLogic.height * 5 / 54));
+            pos = new Vector2(GameLogic.GetRnd(playZoneX1, playZoneX2),GameLogic.GetRnd(-300, -100));
 
         public override void Draw(int frame)
         {
@@ -106,7 +106,7 @@ namespace AstraLostInSpace
         }
 
         public override void RandomSet() =>
-           pos = new Vector2(GameLogic.GetRnd(playZoneX1, playZoneX2), GameLogic.GetRnd(-GameLogic.height * 35 / 54, -GameLogic.height * 5 / 9));
+           pos = new Vector2(GameLogic.GetRnd(playZoneX1, playZoneX2), GameLogic.GetRnd(-700, -600));
 
         public override void Draw(int frame)
         {
@@ -132,7 +132,27 @@ namespace AstraLostInSpace
         }
 
         public override void RandomSet() =>
-          pos = new Vector2(GameLogic.GetRnd(playZoneX1, playZoneX2), GameLogic.GetRnd(-GameLogic.height * 25 / 27, -GameLogic.height * 5 / 6));
+          pos = new Vector2(GameLogic.GetRnd(playZoneX1, playZoneX2), GameLogic.GetRnd(-1000, -900));
+
+        public override void Update(GameTime gameTime, StarShip starShip, int shotDelay)
+        {
+            elapsed += gameTime.ElapsedGameTime.Milliseconds;
+            pos += dir;
+            if (pos.Y > GameLogic.height || expFrameCount > 20) Respawn();
+            else if (health <= 0) expFrameCount++;
+
+            if (!starShip.IsGod && !starShip.IsGameOver && pos.Y >= 0 && pos.Y <= GameLogic.height && elapsed >= shotDelay)
+            {
+                var shipPos = starShip.GetPosForShot;
+                for (var i = 0; i < GameLogic.GetRnd(2, 4); i++)
+                {
+                    GameLogic.alienShots.Add(new AlienShot(new Vector2(GetAlienPos.X + 30, GetAlienPos.Y + 30),
+                        new Vector2(shipPos.X + i * 30, shipPos.Y)));
+                }
+                elapsed = 0;
+            }
+            color = Color.White;
+        }
 
         public override void Draw(int frame)
         {

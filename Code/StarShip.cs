@@ -25,7 +25,7 @@ namespace AstraLostInSpace
         bool isDamaged;
         float elapsed, elapsedToGod;
         public int expFrameCount = 0;
-        float godTimer = 2000;
+        readonly float godTimer = 2000;
 
         TextureType textureType;
 
@@ -36,12 +36,13 @@ namespace AstraLostInSpace
             hitSound.Play();
             health--;
             color = Color.Black;
-            if (health > 0) pos = new Vector2(GameLogic.width / 2, GameLogic.height - 150);
+            if (!IsGameOver) pos = new Vector2(GameLogic.width / 2 - 15, GameLogic.height * 22 / 27);
             isDamaged = true;
         }
 
         public void BecomeGod()
         {
+
             IsGod = true;
             color = Color.FromNonPremultiplied(255, 255, 255, 50);
         }

@@ -26,7 +26,7 @@ namespace AstraLostInSpace
         }
 
         public void RandomSet() =>
-            _pos = new Vector2(GameLogic.GetRnd(playZoneX1, playZoneX2), GameLogic.GetRnd(-GameLogic.height * 20 / 27, 0));
+            _pos = new Vector2(GameLogic.GetRnd(playZoneX1, playZoneX2), GameLogic.GetRnd(-800, 0));
 
         public void Draw() => GameLogic.SpriteBatch.Draw(texture, _pos, color);
     }

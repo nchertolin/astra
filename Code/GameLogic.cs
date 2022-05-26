@@ -137,18 +137,30 @@ namespace AstraLostInSpace
         }
 
         #region Попадание
-        public static bool IsHit(Vector2 shotPos, Vector2 alienPos, int eps)
+        static bool IsHit(Vector2 shotPos, Vector2 alienPos, int eps)
             => shotPos.X >= alienPos.X - eps && shotPos.X <= alienPos.X + eps
                 && shotPos.Y >= alienPos.Y - eps && shotPos.Y <= alienPos.Y + eps;
         # endregion
 
         #region Увеличить счет
-        public static void AddScore(int magnifier)
+        static void AddScore(int magnifier)
         {
             global::AstraLostInSpace.Score.IncreaseScore(magnifier);
             Score = global::AstraLostInSpace.Score.GetCurrentScore;
         }
         # endregion
+
+        static void HitAlien(Alien alien, int i, int magnifier)
+        {
+            alien.TakeDamage();
+            shots.RemoveAt(i);
+            if (alien.isDie)
+            {
+                AddScore(magnifier);
+                Explosion.Play();
+            }
+            else Hit.Play();
+        }
 
         public static void Update(GameTime gameTime)
         {
@@ -195,55 +207,35 @@ namespace AstraLostInSpace
                 var shot = shots[i];
                 shot.Update();
 
-                foreach (var alien in aliensSmall)
-                {
-                    if (IsHit(shot.GetShotPos, alien.GetAlienPos, 20))
-                    {
-                        alien.TakeDamage();
-                        shots.RemoveAt(i);
-                        i--;
-                        if (alien.isDie)
+                Parallel.Invoke(
+                    () =>
+                    {   foreach (var alien in aliensSmall)
                         {
-                            AddScore(1);
-                            Explosion.Play();
-                        }
-                        else Hit.Play();
-                    }
-                }
+                            if (IsHit(shot.GetShotPos, alien.GetAlienPos, 20))
+                            {
+                                HitAlien(alien, i, 1);
+                                i--;
+                            }}},
 
-                foreach (var alien in aliensMed)
-                {
-                    if (IsHit(shot.GetShotPos,
-                        new Vector2(alien.GetAlienPos.X + 30, alien.GetAlienPos.Y), 40))
-                    {
-                        alien.TakeDamage();
-                        shots.RemoveAt(i);
-                        i--;
-                        if (alien.isDie)
+                    () =>
+                    {   foreach (var alien in aliensMed)
                         {
-                            AddScore(5);
-                            Explosion.Play();
-                        }
-                        else Hit.Play();
-                    }
-                }
+                            if (IsHit(shot.GetShotPos,
+                                new Vector2(alien.GetAlienPos.X + 30, alien.GetAlienPos.Y), 40))
+                            {
+                                HitAlien(alien, i, 5);
+                                i--;
+                            }}},
 
-                foreach (var alien in aliensBig)
-                {
-                    if (IsHit(shot.GetShotPos,
-                        new Vector2(alien.GetAlienPos.X + 30, alien.GetAlienPos.Y), 40))
-                    {
-                        alien.TakeDamage();
-                        shots.RemoveAt(i);
-                        i--;
-                        if (alien.isDie)
+                    () =>
+                    {   foreach (var alien in aliensBig)
                         {
-                            AddScore(10);
-                            Explosion.Play();
-                        }
-                        else Hit.Play();
-                    }
-                }
+                            if (IsHit(shot.GetShotPos,
+                                new Vector2(alien.GetAlienPos.X + 30, alien.GetAlienPos.Y), 40))
+                            {
+                                HitAlien(alien, i, 10);
+                                i--;
+                            }}});
 
                 if (shot.IsHidden)
                 {

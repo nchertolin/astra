@@ -116,6 +116,12 @@
 /processorParam:TextureFormat=Color
 /build:lasers.png;lasers
 
+#begin let-the-games-begin-21858.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:let-the-games-begin-21858.mp3;main.mp3
+
 #begin mainTheme.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

@@ -67,7 +67,7 @@ namespace AstraLostInSpace
             BigAlien.texture = Content.Load<Texture2D>("enemyBig");
             Alien.expTexture = Content.Load<Texture2D>("explosion");
 
-            MainTheme = Content.Load<Song>("music");
+            MainTheme = Content.Load<Song>("main");
             MediaPlayer.Play(MainTheme);
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Volume = 0.1f;

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
+using System;
+using System.Collections.Generic;
 
 namespace AstraLostInSpace
 {
@@ -38,6 +40,12 @@ namespace AstraLostInSpace
             color = Color.Black;
             if (!IsGameOver) pos = new Vector2(GameLogic.width / 2 - 15, GameLogic.height * 22 / 27);
             isDamaged = true;
+        }
+
+        public void Kill(List<Healths> healths)
+        {
+            health = 0;
+            healths.Clear();
         }
 
         public void BecomeGod()

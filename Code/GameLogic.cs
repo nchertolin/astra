@@ -17,6 +17,7 @@ namespace AstraLostInSpace
         static SmallAlien[] aliensSmall;
         static MedAlien[] aliensMed;
         static BigAlien[] aliensBig;
+        static Meteor meteor;
 
         public static StarShip starShip { get; set; }
         static List<Shot> shots;
@@ -31,8 +32,9 @@ namespace AstraLostInSpace
 
         static readonly SpriteFont font = SplashScreen.medFont;
         static readonly SpriteFont guideFont = SplashScreen.smallFont;
-        public static int Score { get; private set; }
+        public static Texture2D PwrUp { get; set; }
 
+        public static int Score { get; private set; }
         public static SoundEffect Laser { get; set; }
         public static SoundEffect Hit { get; set; }
         public static SoundEffect Explosion { get; set; }
@@ -84,8 +86,8 @@ namespace AstraLostInSpace
             }
 
             starShip = new StarShip(new Vector2(Width / 2 - 20, Height * 22 / 27)); healths = new List<Healths>();
+            meteor = new Meteor(new Vector2(playZoneX1 * 1 / 2, 0), starShip.GetPosForShot);
             shots = new List<Shot>();
-
             alienShots = new List<AlienShot>();
 
             for (var i = 0; i < 3; i++)
@@ -125,7 +127,7 @@ namespace AstraLostInSpace
             }
             else
             {
-                if (isPowerUp) SpriteBatch.DrawString(guideFont, "x3", new Vector2(playZoneX1, height * 97 / 108), Color.White);
+                if (isPowerUp) SpriteBatch.Draw(PwrUp, new Vector2(playZoneX1, height * 97 / 108), Color.White);
 
                 SpriteBatch.DrawString(font, Score.ToString(), new Vector2(playZoneX1, height * 26 / 27), Color.White);
                 foreach (var health in healths) health.Draw();
@@ -133,11 +135,12 @@ namespace AstraLostInSpace
                 foreach (var alien in aliensMed) alien.Draw(frame);
                 foreach (var alien in aliensBig) alien.Draw(frame);
                 foreach (var shot in alienShots) shot.Draw(frame);
+                meteor.Draw();
             }
         }
 
         #region Попадание
-        static bool IsHit(Vector2 shotPos, Vector2 alienPos, int eps)
+        public static bool IsHit(Vector2 shotPos, Vector2 alienPos, int eps)
             => shotPos.X >= alienPos.X - eps && shotPos.X <= alienPos.X + eps
                 && shotPos.Y >= alienPos.Y - eps && shotPos.Y <= alienPos.Y + eps;
         # endregion
@@ -176,8 +179,12 @@ namespace AstraLostInSpace
                 Parallel.Invoke(
                      () => { foreach (var alien in aliensSmall) alien.Update(gameTime, starShip, 1200); },
                      () => { foreach (var alien in aliensMed) alien.Update(gameTime, starShip, 1000); },
-                     () => { foreach (var alien in aliensBig) alien.Update(gameTime, starShip, 800); }
-                     );
+                     () => { foreach (var alien in aliensBig) alien.Update(gameTime, starShip, 800); },
+                     () => {
+                                meteor.Update(starShip.GetPosForShot, gameTime);
+                                if (IsHit(meteor.GetPosition, starShip.GetPosForShot, 13))
+                                    starShip.Kill(healths);
+                     });
 
                 #region Выстрелы пришельцев
                 for (var i = 0; i < alienShots.Count; i++)

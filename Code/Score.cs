@@ -26,16 +26,19 @@ namespace AstraLostInSpace
 
         public static int ReadHighScore()
         {
-            var sr = new StreamReader("HighScore.txt");
             try
             {
+                var sr = new StreamReader("HighScore.txt");
                 var highScore = int.Parse(sr.ReadLine());
                 sr.Close();
                 return highScore;
-               
             }
             catch (System.Exception)
             {
+                using (FileStream fs = File.Create("HighScore.txt"))
+                {
+                    fs.Write(new UTF8Encoding(true).GetBytes("0", 0, 1));
+                }
                 return 0;
             }
         }

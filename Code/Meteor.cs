@@ -8,7 +8,7 @@ namespace AstraLostInSpace
         private Vector2 _pos;
         private Vector2 _dir;
         private int _speed = 7;
-        private int delay = 2000;
+        private int delay = 25000;
         private int elapsed = 0;
         public static Texture2D texture;
 

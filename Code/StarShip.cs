@@ -42,7 +42,7 @@ namespace AstraLostInSpace
             isDamaged = true;
         }
 
-        public void Kill(List<Healths> healths)
+        public void Death(List<Healths> healths)
         {
             health = 0;
             healths.Clear();
@@ -127,7 +127,11 @@ namespace AstraLostInSpace
                     }
                 }
             }
-            else expFrameCount++;
+            else
+            {
+                if (expFrameCount > 40) expFrameCount++;
+                else AstraLostInSpace.stat = Stat.Final;
+            }
         }
 
         public void Draw(int frame)

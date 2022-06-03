@@ -184,7 +184,7 @@ namespace AstraLostInSpace
                      () => {
                                 meteor.Update(starShip.GetPosForShot, gameTime);
                                 if (IsHit(meteor.GetPosition, starShip.GetPosForShot, 15))
-                                    starShip.Kill(healths);
+                                    starShip.Death(healths);
                      });
 
                 #region Выстрелы пришельцев

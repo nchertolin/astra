@@ -85,7 +85,8 @@ namespace AstraLostInSpace
                 aliensBig[i] = new BigAlien(new Vector2(GetRnd(playZoneX1 + 30, playZoneX2 - 30), GetRnd(-height * 20 / 27, -height * 65 / 108)), new Vector2(0, 0.5f));
             }
 
-            starShip = new StarShip(new Vector2(Width / 2 - 20, Height * 22 / 27)); healths = new List<Healths>();
+            starShip = new StarShip(new Vector2(Width / 2 - 20, Height * 22 / 27));
+            healths = new List<Healths>();
             meteor = new Meteor(new Vector2(playZoneX1 * 1 / 2, 0), starShip.GetPosForShot);
             shots = new List<Shot>();
             alienShots = new List<AlienShot>();
@@ -182,7 +183,7 @@ namespace AstraLostInSpace
                      () => { foreach (var alien in aliensBig) alien.Update(gameTime, starShip, 800); },
                      () => {
                                 meteor.Update(starShip.GetPosForShot, gameTime);
-                                if (IsHit(meteor.GetPosition, starShip.GetPosForShot, 13))
+                                if (IsHit(meteor.GetPosition, starShip.GetPosForShot, 15))
                                     starShip.Kill(healths);
                      });
 

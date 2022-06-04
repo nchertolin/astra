@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Audio;
-using System;
 using System.Collections.Generic;
 
 namespace AstraLostInSpace
@@ -15,10 +14,10 @@ namespace AstraLostInSpace
             Left,
             Move
         }
-        Vector2 pos;
-        Color color = Color.White;
+        private Vector2 pos;
+        private Color color = Color.White;
 
-        public int speed = 4;
+        public int Speed = 4;
         public static Texture2D texture;
         public static SoundEffect hitSound;
         int health = 3;
@@ -72,7 +71,7 @@ namespace AstraLostInSpace
             if (pos.Y > 0 && !IsGameOver)
             {
                 textureType = TextureType.Move;
-                pos.Y -= speed;
+                pos.Y -= Speed;
             }
         }
 
@@ -81,7 +80,7 @@ namespace AstraLostInSpace
             if (pos.Y < GameLogic.height - 50 && !IsGameOver)
             {
                 textureType = TextureType.Move;
-                pos.Y += speed;
+                pos.Y += Speed;
             }
         }
 
@@ -90,7 +89,7 @@ namespace AstraLostInSpace
             if (pos.X > GameLogic.playZoneX1 && !IsGameOver)
             {
                 textureType = TextureType.Left;
-                pos.X -= speed;
+                pos.X -= Speed;
             }
         }
         public void Right()
@@ -98,7 +97,7 @@ namespace AstraLostInSpace
             if (pos.X < GameLogic.playZoneX2 && !IsGameOver)
             {
                 textureType = TextureType.Right;
-                pos.X += speed;
+                pos.X += Speed;
             }
         }
 

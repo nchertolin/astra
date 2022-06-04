@@ -31,7 +31,7 @@ namespace AstraLostInSpace
                 spriteBatch.DrawString(medFont, $"high score: {highScore}", new Vector2(width * 79 / 192, height * 55 / 108), Color.White);
             }
             spriteBatch.DrawString(smallFont, "press \'space\' to restart", new Vector2(width * 13 / 32, height * 65 / 108), color);
-            spriteBatch.DrawString(smallFont, "press \'esc\' to restart", new Vector2(width * 5 / 12, height * 25 / 36), color);
+            spriteBatch.DrawString(smallFont, "press \'esc\' to exit", new Vector2(width * 5 / 12, height * 25 / 36), color);
         }
 
         public static void Update()

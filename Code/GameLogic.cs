@@ -9,7 +9,10 @@ namespace AstraLostInSpace
 {
     public class GameLogic
     {
-        public static int width, height, playZoneX1, playZoneX2;
+        public static int width;
+        public static int height;
+        public static int playZoneX1;
+        public static int playZoneX2;
         public static Random rnd = new Random();
         public static SpriteBatch SpriteBatch { get; set; }
 
@@ -61,11 +64,16 @@ namespace AstraLostInSpace
 
         public static void Initialize(SpriteBatch spriteBatch, int Width, int Height)
         {
-            width = Width; height = Height; playZoneX1 = width * 7 / 24; playZoneX2 = width * 17 / 24 + 1;
+            width = Width;
+            height = Height;
+            playZoneX1 = width * 7 / 24;
+            playZoneX2 = width * 17 / 24 + 1;
             SpriteBatch = spriteBatch;
             stars = new Star[90];
-            aliensSmall = new SmallAlien[2]; aliensMed = new MedAlien[1]; aliensBig = new BigAlien[1];
-            Score = 0; frame = 0; frame = 0;
+            aliensSmall = new SmallAlien[2];
+            aliensMed = new MedAlien[1];
+            aliensBig = new BigAlien[1];
+            Score = frame = 0;
             delay = 300;
 
             SoundEffect.MasterVolume = 0.03f;
@@ -168,8 +176,11 @@ namespace AstraLostInSpace
 
         public static void Update(GameTime gameTime)
         {
-            if (starShip.IsGameOver) Final.score = Score;
-            if (elapsedForGuide < 6000) elapsedForGuide += gameTime.ElapsedGameTime.Milliseconds;
+            if (starShip.IsGameOver)
+                Final.score = Score;
+
+            if (elapsedForGuide < 6000)
+                elapsedForGuide += gameTime.ElapsedGameTime.Milliseconds;
 
             Animate(gameTime);
             foreach (var star in stars) star.Update();

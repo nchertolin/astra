@@ -9,7 +9,7 @@ namespace AstraLostInSpace
     {
         Vector2 _pos;
         Vector2 _dir;
-        const int Speed = 7;
+        public int Speed = 7;
         public static Texture2D texture2D;
 
         public Vector2 GetShotPos => _pos;

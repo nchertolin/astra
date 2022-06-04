@@ -36,7 +36,8 @@ namespace AstraLostInSpace
         {
             graphics.PreferredBackBufferWidth = graphics.GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferHeight = graphics.GraphicsDevice.DisplayMode.Height;
-            width = graphics.PreferredBackBufferWidth; height = graphics.PreferredBackBufferHeight;
+            width = graphics.PreferredBackBufferWidth;
+            height = graphics.PreferredBackBufferHeight;
             graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             base.Initialize();

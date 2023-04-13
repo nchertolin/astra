@@ -1,3 +1,4 @@
 # AstraLostInSpace
 
-Личный проект игры в рамках 1 курса 2 семестра.
+Personal game project 2nd semester.
+C# monogame framework
